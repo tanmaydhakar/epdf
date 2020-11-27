@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "server_port": ""
+  },
+  "test": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "server_port": ""
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "database": "epdf_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "server_port": ""
+  }
+}
