@@ -23,5 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Role.findBySpecificField = async function (fields) {
+    const queryOptions = {
+      where: fields
+    };
+
+    const role = await Role.findOne(queryOptions);
+    return role;
+  };
+
   return Role;
 };
