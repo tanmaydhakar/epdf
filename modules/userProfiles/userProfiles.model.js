@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_id: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         references: {
           model: 'users',
           key: 'id'
@@ -34,9 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'UserProfile',
-      tableName: 'user_profiles',
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
+      tableName: 'user_profiles'
     }
   );
 

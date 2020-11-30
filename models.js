@@ -38,6 +38,9 @@ Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
+  if (db[modelName].registerModels) {
+    db[modelName].registerModels(db);
+  }
 });
 
 db.sequelize = sequelize;
