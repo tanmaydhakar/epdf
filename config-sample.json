@@ -5,7 +5,8 @@
     "database": "",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "server_port": ""
+    "server_port": "",
+    "secret": ""
   },
   "test": {
     "username": "",
@@ -13,7 +14,8 @@
     "database": "",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "server_port": ""
+    "server_port": "",
+    "secret": ""
   },
   "production": {
     "username": "",
@@ -21,6 +23,8 @@
     "database": "epdf_production",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "server_port": ""
+    "logging": false,
+    "server_port": "",
+    "secret": ""
   }
 }

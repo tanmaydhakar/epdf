@@ -1,6 +1,8 @@
 const { Model } = require('sequelize');
 const bcrypt = require('bcrypt');
 
+let allModels;
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
@@ -39,6 +41,37 @@ module.exports = (sequelize, DataTypes) => {
       return resolve(null, options);
     });
   });
+
+  User.registerModels = function (models) {
+    allModels = models;
+  };
+
+  User.afterCreate(async user => {
+    const { Role, UserRole, UserProfile } = allModels;
+
+    const field = {
+      name: 'reader'
+    };
+    const role = await Role.findBySpecificField(field);
+
+    const userRole = new UserRole();
+    userRole.user_id = user.id;
+    userRole.role_id = role.id;
+    await userRole.save();
+
+    const userProfile = new UserProfile();
+    userProfile.user_id = user.id;
+    await userProfile.save();
+  });
+
+  User.findBySpecificField = async function (fields) {
+    const queryOptions = {
+      where: fields
+    };
+
+    const user = await User.findOne(queryOptions);
+    return user;
+  };
 
   return User;
 };
