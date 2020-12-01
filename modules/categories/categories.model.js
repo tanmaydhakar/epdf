@@ -19,5 +19,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Category.findBySpecificField = async function (fields) {
+    const queryOptions = {
+      where: fields
+    };
+
+    const category = await Category.findOne(queryOptions);
+    return category;
+  };
+
   return Category;
 };

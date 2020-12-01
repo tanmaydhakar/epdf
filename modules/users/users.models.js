@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     const { Role, UserRole, UserProfile } = allModels;
 
     const field = {
-      name: 'reader'
+      name: 'Reader'
     };
     const role = await Role.findBySpecificField(field);
 
