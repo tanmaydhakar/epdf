@@ -10,7 +10,7 @@ const pdfAccessValidator = async function (req, res, next) {
     if (req.user.roles.includes('Admin')) {
       return next();
     }
-    const { pdfId } = req.params;
+    const pdfId = req.params.pdfId ? req.params.pdfId : req.body.pdfId;
 
     const pdf = await Pdf.findByPk(pdfId);
     if (pdf.user_id !== req.user.id) {
