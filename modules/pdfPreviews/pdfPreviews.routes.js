@@ -12,7 +12,16 @@ module.exports = function (router) {
     rules.getRules,
     rules.verifyRules,
     customPolicy.pdfAccessValidator,
-    pdfPreviewController.update
+    pdfPreviewController.list
+  );
+
+  router.post(
+    '/api/pdfPreview',
+    auth.verifyToken,
+    rules.createRules,
+    rules.verifyRules,
+    customPolicy.pdfAccessValidator,
+    pdfPreviewController.create
   );
 
   router.patch(

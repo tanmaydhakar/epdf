@@ -5,6 +5,18 @@ const serializer = require(path.resolve('./modules/pdfPreviews/pdfPreviews.seria
 const db = require(path.resolve('./models'));
 const { PdfPreviews } = db;
 
+const list = async function (req, res) {
+  try {
+    const pdfPreviewsData = await PdfPreviews.getPreviews(req.body.pdfId);
+
+    const responseData = await serializer.pdfPreviews(pdfPreviewsData);
+    return res.status(201).json({ pdfPreviews: responseData });
+  } catch (error) {
+    const errorResponse = errorHandler.getErrorMessage(error);
+    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
+  }
+};
+
 const create = async function (req, res) {
   try {
     const pdfPreviewsData = await PdfPreviews.createPdfPreview(req);
@@ -30,6 +42,7 @@ const update = async function (req, res) {
 };
 
 module.exports = {
+  list,
   create,
   update
 };
