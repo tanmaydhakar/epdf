@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   PdfCategory.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4
+      },
       pdf_id: {
         allowNull: false,
         type: DataTypes.INTEGER,

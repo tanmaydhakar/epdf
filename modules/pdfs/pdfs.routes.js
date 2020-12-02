@@ -19,10 +19,10 @@ module.exports = function (router) {
   router.get(
     '/api/pdf/:pdfId',
     auth.verifyToken,
-    rules.listRules,
+    rules.showRules,
     rules.verifyRules,
     customPolicy.pdfAccessValidator,
-    pdfController.list
+    pdfController.show
   );
 
   router.patch(
@@ -30,7 +30,6 @@ module.exports = function (router) {
     auth.verifyToken,
     rules.updateRules,
     rules.verifyRules,
-    customPolicy.pdfAccessValidator,
     pdfController.update
   );
 
@@ -39,7 +38,6 @@ module.exports = function (router) {
     auth.verifyToken,
     rules.destroyRules,
     rules.verifyRules,
-    customPolicy.pdfAccessValidator,
     pdfController.destroy
   );
 };

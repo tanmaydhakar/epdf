@@ -84,10 +84,13 @@ const createRules = [
 ];
 
 const updateRules = [
-  param('pdfId').custom(async value => {
+  param('pdfId').custom(async (value, { req }) => {
     const pdf = await Pdf.findByPk(value);
     if (!pdf) {
       return Promise.reject(new Error('invalid pdfId'));
+    }
+    if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+      return Promise.reject(new Error('You dont have permission to access this resource'));
     }
     return true;
   }),
@@ -168,21 +171,31 @@ const updateRules = [
     })
 ];
 
-const listRules = [
-  param('pdfId').custom(async value => {
+const showRules = [
+  param('pdfId').custom(async (value, { req }) => {
     const pdf = await Pdf.findByPk(value);
     if (!pdf) {
       return Promise.reject(new Error('invalid pdfId'));
+    }
+    if (
+      pdf.access_type !== 'Public' &&
+      pdf.user_id !== req.user.id &&
+      !pdf.user.roles.includes('Admin')
+    ) {
+      return Promise.reject(new Error('You dont have permission to access this resource'));
     }
     return true;
   })
 ];
 
 const destroyRules = [
-  param('pdfId').custom(async value => {
+  param('pdfId').custom(async (value, { req }) => {
     const pdf = await Pdf.findByPk(value);
     if (!pdf) {
       return Promise.reject(new Error('invalid pdfId'));
+    }
+    if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+      return Promise.reject(new Error('You dont have permission to access this resource'));
     }
     return true;
   })
@@ -192,6 +205,9 @@ const verifyRules = function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errors.array().shift();
+    if (error.msg === 'You dont have permission to access this resource') {
+      return res.status(403).json({ message: error });
+    }
     return res.status(422).json({ message: error });
   }
   return next();
@@ -201,6 +217,6 @@ module.exports = {
   verifyRules,
   createRules,
   updateRules,
-  listRules,
+  showRules,
   destroyRules
 };

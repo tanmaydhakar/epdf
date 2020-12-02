@@ -8,10 +8,13 @@ const getRules = [
   body('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
-    .custom(async value => {
+    .custom(async (value, { req }) => {
       const pdf = await Pdf.findByPk(value);
       if (!pdf) {
         return Promise.reject(new Error('invalid pdfId'));
+      }
+      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+        return Promise.reject(new Error('You dont have permission to access this resource'));
       }
       return true;
     })
@@ -21,13 +24,16 @@ const createRules = [
   body('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
-    .custom(async value => {
+    .custom(async (value, { req }) => {
       const pdf = await Pdf.findByPk(value);
       if (!pdf) {
         return Promise.reject(new Error('invalid pdfId'));
       }
+      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+        return Promise.reject(new Error('You dont have permission to access this resource'));
+      }
       const previews = await pdf.getPreviews();
-      if (previews) {
+      if (previews.length) {
         return Promise.reject(new Error('previews already exists for this pdf'));
       }
       return true;
@@ -53,10 +59,13 @@ const updateRules = [
   body('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
-    .custom(async value => {
+    .custom(async (value, { req }) => {
       const pdf = await Pdf.findByPk(value);
       if (!pdf) {
         return Promise.reject(new Error('invalid pdfId'));
+      }
+      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+        return Promise.reject(new Error('You dont have permission to access this resource'));
       }
       return true;
     }),
@@ -81,6 +90,9 @@ const verifyRules = function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errors.array().shift();
+    if (error.msg === 'You dont have permission to access this resource') {
+      return res.status(403).json({ message: error });
+    }
     return res.status(422).json({ message: error });
   }
   return next();

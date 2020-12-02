@@ -1,4 +1,4 @@
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 
 let allModels;
 
@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Pdf.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4
+      },
       title: {
         allowNull: false,
         type: DataTypes.STRING
@@ -101,11 +107,22 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Pdf.index = async function (data) {
-    const whereStatement = {};
+    let whereStatement;
     const sortBy = [];
 
     if (!data.user.roles.includes('Admin')) {
-      whereStatement.user_id = data.user.id;
+      whereStatement = {
+        [Op.or]: [
+          {
+            access_type: 'Public'
+          },
+          {
+            user_id: data.user.id
+          }
+        ]
+      };
+    } else {
+      whereStatement = {};
     }
 
     if (data.query.sort === 'title') {
@@ -121,7 +138,14 @@ module.exports = (sequelize, DataTypes) => {
       order: sortBy,
       include: [
         { model: allModels.PdfPreviews, as: 'previews', attributes: ['image_url'] },
-        { model: allModels.Category, as: 'categories', attributes: ['name'] }
+        {
+          model: allModels.Category,
+          as: 'categories',
+          attributes: ['name'],
+          through: {
+            attributes: []
+          }
+        }
       ]
     });
 

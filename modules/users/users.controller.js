@@ -8,14 +8,19 @@ const auth = require(path.resolve('./utilities/auth'));
 const { User } = db;
 
 const register = async function (req, res) {
-  const user = new User();
-  user.username = req.body.username;
-  user.email = req.body.email;
-  user.password = req.body.password;
-  await user.save();
+  try {
+    const user = new User();
+    user.username = req.body.username;
+    user.email = req.body.email;
+    user.password = req.body.password;
+    await user.save({ role: req.body.role });
 
-  const responseData = await serializer.registerUser(user);
-  return res.status(200).json({ user: responseData });
+    const responseData = await serializer.registerUser(user);
+    return res.status(200).json({ user: responseData });
+  } catch (error) {
+    const errorResponse = errorHandler.getErrorMessage(error);
+    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
+  }
 };
 
 const signin = async function (req, res) {

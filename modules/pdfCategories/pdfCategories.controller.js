@@ -5,12 +5,12 @@ const serializer = require(path.resolve('./modules/pdfCategories/pdfCategories.s
 const db = require(path.resolve('./models'));
 const { PdfCategory } = db;
 
-const list = async function (req, res) {
+const show = async function (req, res) {
   try {
     const pdfCategories = await PdfCategory.getPdfCategories(req.body.pdfId);
 
     const responseData = await serializer.pdfCategories(pdfCategories);
-    return res.status(201).json({ pdfPreviews: responseData });
+    return res.status(201).json({ pdfCategories: responseData });
   } catch (error) {
     const errorResponse = errorHandler.getErrorMessage(error);
     return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
@@ -22,7 +22,7 @@ const create = async function (req, res) {
     const pdfCategories = await PdfCategory.createPdfCategories(req);
 
     const responseData = await serializer.pdfCategories(pdfCategories);
-    return res.status(201).json({ pdfPreviews: responseData });
+    return res.status(201).json({ pdfCategories: responseData });
   } catch (error) {
     const errorResponse = errorHandler.getErrorMessage(error);
     return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
@@ -34,7 +34,7 @@ const update = async function (req, res) {
     const pdfCategories = await PdfCategory.updatePdfCategories(req);
 
     const responseData = await serializer.pdfCategories(pdfCategories);
-    return res.status(201).json({ pdfPreviews: responseData });
+    return res.status(201).json({ pdfCategories: responseData });
   } catch (error) {
     const errorResponse = errorHandler.getErrorMessage(error);
     return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
@@ -42,7 +42,7 @@ const update = async function (req, res) {
 };
 
 module.exports = {
-  list,
+  show,
   create,
   update
 };

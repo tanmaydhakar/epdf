@@ -3,7 +3,7 @@ const path = require('path');
 const db = require(path.resolve('./models'));
 const { body, validationResult } = require('express-validator');
 
-const { User } = db;
+const { User, Role } = db;
 
 const registerRules = [
   body('username')
@@ -62,7 +62,21 @@ const registerRules = [
     .matches(/(?=.*[A-Z])/, 'i')
     .withMessage('Password should contain atleast one capital letter')
     .matches(/[-+_!@#$%^&*.,?]/, 'i')
-    .withMessage('Password should contain atleast one special character')
+    .withMessage('Password should contain atleast one special character'),
+
+  body('role').custom(async value => {
+    if (!value) {
+      return true;
+    }
+    const field = {
+      name: value
+    };
+    const role = await Role.findBySpecificField(field);
+    if (!role || role.name === 'Admin') {
+      return Promise.reject(new Error('role is invalid'));
+    }
+    return true;
+  })
 ];
 
 const loginRules = [

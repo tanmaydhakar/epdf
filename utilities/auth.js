@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 
 const db = require(path.resolve('./models'));
-const { UserRole } = db;
+const { User, UserRole, Role } = db;
 
 const verifyToken = function (req, res, next) {
   if (!req.headers.authorization) {
@@ -22,18 +22,28 @@ const verifyToken = function (req, res, next) {
     req.user.roles = [];
 
     const where = {
-      user_id: decoded.id
+      id: decoded.id
     };
 
-    const roles = await UserRole.findAll({
+    const user = await User.findOne({
       where,
-      include: [{ all: true, nested: true }]
+      attributes: [],
+      include: [
+        {
+          model: Role,
+          as: 'roles',
+          attributes: ['name'],
+          through: {
+            attributes: []
+          }
+        }
+      ]
     });
-    if (roles.length) {
-      roles.forEach(userRole => {
-        req.user.roles.push(userRole.role.name);
-      });
-    }
+
+    user.roles.forEach(role => {
+      req.user.roles.push(role.name);
+    });
+
     return next();
   });
 };

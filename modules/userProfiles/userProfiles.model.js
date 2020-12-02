@@ -4,6 +4,12 @@ module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {}
   UserProfile.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4
+      },
       first_name: {
         type: DataTypes.STRING
       },

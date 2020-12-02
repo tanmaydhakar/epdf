@@ -8,10 +8,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.UserRole, { as: 'userRole', foreignKey: 'user_id' });
       this.hasMany(models.UserProfile, { as: 'userProfile', foreignKey: 'user_id' });
+      this.belongsToMany(models.Role, {
+        as: 'roles',
+        through: models.UserRole,
+        localKey: 'id',
+        foreignKey: 'user_id',
+        otherKey: 'role_id'
+      });
     }
   }
   User.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4
+      },
       username: {
         allowNull: false,
         unique: true,
@@ -46,12 +59,12 @@ module.exports = (sequelize, DataTypes) => {
     allModels = models;
   };
 
-  User.afterCreate(async user => {
+  User.afterCreate(async (user, options) => {
     const { Role, UserRole, UserProfile } = allModels;
 
-    const field = {
-      name: 'Reader'
-    };
+    const field = {};
+    field.name = options.role ? options.role : 'Reader';
+
     const role = await Role.findBySpecificField(field);
 
     const userRole = new UserRole();

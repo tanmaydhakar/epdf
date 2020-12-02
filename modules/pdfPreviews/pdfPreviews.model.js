@@ -10,6 +10,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   PdfPreviews.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: DataTypes.UUIDV4
+      },
       image_url: {
         type: DataTypes.STRING
       },

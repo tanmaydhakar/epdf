@@ -8,10 +8,13 @@ const getRules = [
   body('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
-    .custom(async value => {
+    .custom(async (value, { req }) => {
       const pdf = await Pdf.findByPk(value);
       if (!pdf) {
         return Promise.reject(new Error('invalid pdfId'));
+      }
+      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+        return Promise.reject(new Error('You dont have permission to access this resource'));
       }
       return true;
     })
@@ -21,10 +24,17 @@ const createRules = [
   body('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
-    .custom(async value => {
+    .custom(async (value, { req }) => {
       const pdf = await Pdf.findByPk(value);
       if (!pdf) {
         return Promise.reject(new Error('invalid pdfId'));
+      }
+      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+        return Promise.reject(new Error('You dont have permission to access this resource'));
+      }
+      const categories = await pdf.getCategorys();
+      if (categories.length) {
+        return Promise.reject(new Error('categories already exists for this pdf'));
       }
       return true;
     }),
@@ -38,7 +48,7 @@ const createRules = [
       }
       for (let i = 0; i <= value.length - 1; i += 1) {
         const field = {
-          name: value[0]
+          name: value[i]
         };
         const category = await Category.findBySpecificField(field);
         if (!category) {
@@ -53,10 +63,13 @@ const updateRules = [
   body('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
-    .custom(async value => {
+    .custom(async (value, { req }) => {
       const pdf = await Pdf.findByPk(value);
       if (!pdf) {
         return Promise.reject(new Error('invalid pdfId'));
+      }
+      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
+        return Promise.reject(new Error('You dont have permission to access this resource'));
       }
       return true;
     }),
@@ -70,7 +83,7 @@ const updateRules = [
       }
       for (let i = 0; i <= value.length - 1; i += 1) {
         const field = {
-          name: value[0]
+          name: value[i]
         };
         const category = await Category.findBySpecificField(field);
         if (!category) {
@@ -85,6 +98,9 @@ const verifyRules = function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errors.array().shift();
+    if (error.msg === 'You dont have permission to access this resource') {
+      return res.status(403).json({ message: error });
+    }
     return res.status(422).json({ message: error });
   }
   return next();

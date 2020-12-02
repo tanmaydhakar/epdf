@@ -5,7 +5,7 @@ const serializer = require(path.resolve('./modules/pdfPreviews/pdfPreviews.seria
 const db = require(path.resolve('./models'));
 const { PdfPreviews } = db;
 
-const list = async function (req, res) {
+const show = async function (req, res) {
   try {
     const pdfPreviewsData = await PdfPreviews.getPreviews(req.body.pdfId);
 
@@ -42,7 +42,7 @@ const update = async function (req, res) {
 };
 
 module.exports = {
-  list,
+  show,
   create,
   update
 };

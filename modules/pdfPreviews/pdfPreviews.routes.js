@@ -2,7 +2,6 @@ const path = require('path');
 
 const rules = require(path.resolve('./modules/pdfPreviews/pdfPreviews.validator'));
 const auth = require(path.resolve('./utilities/auth'));
-const customPolicy = require(path.resolve('./modules/pdfs/pdfs.custom.policy'));
 const pdfPreviewController = require(path.resolve('./modules/pdfPreviews/pdfPreviews.controller'));
 
 module.exports = function (router) {
@@ -11,8 +10,7 @@ module.exports = function (router) {
     auth.verifyToken,
     rules.getRules,
     rules.verifyRules,
-    customPolicy.pdfAccessValidator,
-    pdfPreviewController.list
+    pdfPreviewController.show
   );
 
   router.post(
@@ -20,7 +18,6 @@ module.exports = function (router) {
     auth.verifyToken,
     rules.createRules,
     rules.verifyRules,
-    customPolicy.pdfAccessValidator,
     pdfPreviewController.create
   );
 
@@ -29,7 +26,6 @@ module.exports = function (router) {
     auth.verifyToken,
     rules.updateRules,
     rules.verifyRules,
-    customPolicy.pdfAccessValidator,
     pdfPreviewController.update
   );
 };
