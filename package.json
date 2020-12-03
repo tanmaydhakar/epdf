@@ -4,7 +4,8 @@
   "description": "Api server for epdf reader",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon"
+    "start": "NODE_ENV=development nodemon",
+    "createAdmin": "node ./scripts/createAdmin"
   },
   "repository": {
     "type": "git",
