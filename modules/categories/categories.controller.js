@@ -7,7 +7,7 @@ const { Category } = db;
 
 const index = async function (req, res) {
   try {
-    const categories = await Category.getCategories();
+    const categories = await Category.getCategories(req);
 
     const responseData = await serializer.categories(categories);
     return res.status(200).json({ categories: responseData });

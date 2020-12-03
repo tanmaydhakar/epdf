@@ -34,10 +34,20 @@ module.exports = (sequelize, DataTypes) => {
     return category;
   };
 
-  Category.getCategories = async function () {
+  Category.getCategories = async function (data) {
+    const wherestatement = {};
+    const sortBy = [];
+
+    if (data.query.sort === 'name') {
+      sortBy.push(['name', 'asc']);
+    } else {
+      sortBy.push(['updatedAt', 'desc']);
+    }
     const categories = await Category.findAll({
-      where: {},
-      attributes: ['id', 'name']
+      where: wherestatement,
+      order: sortBy,
+      attributes: ['id', 'name'],
+      raw: true
     });
 
     return categories;
