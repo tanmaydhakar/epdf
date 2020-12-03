@@ -26,10 +26,27 @@ const setupConfigs = function () {
  * */
 const setupRoutes = function () {
   return new Promise((resolve, reject) => {
-    const resisterRoutesPromise = require(path.resolve('./routes')).registerRoutes(expressRouter);
+    const resisterRoutesPromise = require(path.resolve('./register')).registerRoutes(expressRouter);
     resisterRoutesPromise
       .then(routerInstance => {
         return resolve(routerInstance);
+      })
+      .catch(err => {
+        return reject(err);
+      });
+  });
+};
+
+/**
+ * Method to setup all policies
+ * @returns {Promise} resolve - returns the success state of promise
+ * */
+const setupPolicies = function () {
+  return new Promise((resolve, reject) => {
+    const resisterRoutesPromise = require(path.resolve('./register')).registerPolicies();
+    resisterRoutesPromise
+      .then(() => {
+        return resolve();
       })
       .catch(err => {
         return reject(err);
@@ -65,9 +82,12 @@ const setupServer = function () {
     setupSequelizePromise.then(() => {
       const setupRoutesPromise = setupRoutes();
       setupRoutesPromise.then(router => {
-        app.use('/', router);
-        app.listen(process.env.server_port);
-        console.log(`SERVER STARTED ON PORT ${process.env.server_port}!`);
+        const setupPoliciesPromise = setupPolicies();
+        setupPoliciesPromise.then(() => {
+          app.use('/', router);
+          app.listen(process.env.server_port);
+          console.log(`SERVER STARTED ON PORT ${process.env.server_port}!`);
+        });
       });
     });
   });

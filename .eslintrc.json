@@ -22,6 +22,7 @@
     "global-require": "off",
     "no-shadow": "warn",
     "no-restricted-globals": "warn",
-    "radix": "off"
+    "radix": "off",
+    "new-cap": "warn"
   }
 }

@@ -1,6 +1,6 @@
 const Acl = require('acl');
 
-acl = new Acl(new Acl.memoryBackend());
+const acl = new Acl(new Acl.memoryBackend());
 
 exports.invokeRolesPolicies = function () {
   acl.allow([
@@ -8,16 +8,12 @@ exports.invokeRolesPolicies = function () {
       roles: ['Admin'],
       allows: [
         {
-          resources: '/api/pdf/:pdfId',
-          permissions: ['post', 'delete', 'patch']
+          resources: '/api/categories',
+          permissions: ['get', 'post']
         },
         {
-          resource: '/api/pdfs',
-          premissions: ['get']
-        },
-        {
-          resource: '/api/pdf/:pdfId',
-          premissions: ['get']
+          resources: '/api/categories/:categoryId',
+          permissions: ['patch', 'delete']
         }
       ]
     },
@@ -25,31 +21,18 @@ exports.invokeRolesPolicies = function () {
       roles: ['Author', 'Publication House', 'Parttime Blogger'],
       allows: [
         {
-          resources: '/api/pdf/:pdfId',
-          permissions: ['post', 'delete', 'patch']
+          resources: '/api/categories',
+          permissions: ['get', 'post']
         },
         {
-          resource: '/api/pdfs',
-          premissions: ['get']
-        },
-        {
-          resource: '/api/pdf/:pdfId',
-          premissions: ['get']
+          resources: '/api/categories/:categoryId',
+          permissions: ['patch', 'delete']
         }
       ]
     },
     {
       roles: ['Reader'],
-      allows: [
-        {
-          resource: '/api/pdfs',
-          premissions: ['get']
-        },
-        {
-          resource: '/api/pdf/:pdfId',
-          premissions: ['get']
-        }
-      ]
+      allows: []
     },
     {
       roles: ['Guest'],
