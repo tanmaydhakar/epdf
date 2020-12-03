@@ -34,5 +34,44 @@ module.exports = (sequelize, DataTypes) => {
     return category;
   };
 
+  Category.getCategories = async function () {
+    const categories = await Category.findAll({
+      where: {},
+      attributes: ['id', 'name']
+    });
+
+    return categories;
+  };
+
+  Category.addCategory = async function (data) {
+    const { name } = data.body;
+
+    const category = new Category();
+    category.name = name;
+    await category.save();
+
+    return category;
+  };
+
+  Category.updateCategory = async function (data) {
+    const { categoryId } = data.params;
+    const { name } = data.body;
+
+    const category = await Category.findByPk(categoryId);
+    category.name = name;
+    await category.save();
+
+    return category;
+  };
+
+  Category.destroyCategory = async function (data) {
+    const { categoryId } = data.params;
+
+    const category = await Category.findByPk(categoryId);
+    await category.destroy();
+
+    return category;
+  };
+
   return Category;
 };
