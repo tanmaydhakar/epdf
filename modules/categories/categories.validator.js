@@ -7,14 +7,14 @@ const { Category } = db;
 const addRules = [
   body('name')
     .exists()
-    .withMessage('category does not exists')
+    .withMessage('name does not exists')
     .isString()
-    .withMessage('category must be string')
+    .withMessage('name must be string')
     .trim()
     .isLength({
       min: 1
     })
-    .withMessage('category should be minimum 1 characters')
+    .withMessage('name should be minimum 1 characters')
     .custom(async value => {
       const field = {
         name: value
@@ -38,14 +38,14 @@ const updateRules = [
 
   body('name')
     .exists()
-    .withMessage('category does not exists')
+    .withMessage('name does not exists')
     .isString()
-    .withMessage('category must be string')
+    .withMessage('name must be string')
     .trim()
     .isLength({
       min: 1
     })
-    .withMessage('category should be minimum 1 characters')
+    .withMessage('name should be minimum 1 characters')
     .custom(async value => {
       const field = {
         name: value

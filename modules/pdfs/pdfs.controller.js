@@ -31,7 +31,7 @@ const index = async function (req, res) {
 
 const show = async function (req, res) {
   try {
-    const pdf = await Pdf.findByPk(req.params.pdfId);
+    const pdf = await Pdf.getPdf(req.params.pdfId);
     const responseData = await serializer.pdf(pdf);
 
     return res.status(201).json({ pdf: responseData });
@@ -43,7 +43,7 @@ const show = async function (req, res) {
 
 const update = async function (req, res) {
   try {
-    const pdf = await Pdf.update(req);
+    const pdf = await Pdf.updatePdf(req);
     const responseData = await serializer.pdf(pdf);
 
     return res.status(200).json({ pdf: responseData });

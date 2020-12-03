@@ -7,7 +7,7 @@ const { PdfPreviews } = db;
 
 const show = async function (req, res) {
   try {
-    const pdfPreviewsData = await PdfPreviews.getPreviews(req.body.pdfId);
+    const pdfPreviewsData = await PdfPreviews.getPreviews(req.params.pdfId);
 
     const responseData = await serializer.pdfPreviews(pdfPreviewsData);
     return res.status(201).json({ pdfPreviews: responseData });

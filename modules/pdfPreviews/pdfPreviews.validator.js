@@ -1,11 +1,11 @@
 const path = require('path');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, param } = require('express-validator');
 
 const db = require(path.resolve('./models'));
 const { Pdf } = db;
 
 const getRules = [
-  body('pdfId')
+  param('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
     .custom(async (value, { req }) => {
@@ -21,7 +21,7 @@ const getRules = [
 ];
 
 const createRules = [
-  body('pdfId')
+  param('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
     .custom(async (value, { req }) => {
@@ -56,7 +56,7 @@ const createRules = [
 ];
 
 const updateRules = [
-  body('pdfId')
+  param('pdfId')
     .exists()
     .withMessage('pdfId does not exists')
     .custom(async (value, { req }) => {

@@ -7,7 +7,9 @@ const pdf = function (pdf) {
   finalPdfData.author = pdf.author;
   finalPdfData.short_description = pdf.short_description;
   finalPdfData.access_type = pdf.access_type;
-  finalPdfData.user_id = pdf.user_id;
+  finalPdfData.user = pdf.user;
+  finalPdfData.previews = pdf.previews;
+  finalPdfData.categories = pdf.categories;
 
   return finalPdfData;
 };
@@ -24,7 +26,7 @@ const indexPdfs = function (pdfs) {
     pdfData.author = pdf.author;
     pdfData.short_description = pdf.short_description;
     pdfData.access_type = pdf.access_type;
-    pdfData.user_id = pdf.user_id;
+    pdfData.user = pdf.user;
     pdfData.previews = pdf.previews;
     pdfData.categories = pdf.categories;
 

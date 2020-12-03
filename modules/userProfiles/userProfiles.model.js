@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   UserProfile.updateUserProfile = async function (data) {
-    const userId = data.body.user_id;
+    const { userId } = data.params;
 
     const field = {
       user_id: userId

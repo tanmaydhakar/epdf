@@ -2,7 +2,6 @@ const path = require('path');
 
 const rules = require(path.resolve('./modules/pdfs/pdfs.validator'));
 const auth = require(path.resolve('./utilities/auth'));
-const customPolicy = require(path.resolve('./modules/pdfs/pdfs.custom.policy'));
 const pdfController = require(path.resolve('./modules/pdfs/pdfs.controller'));
 
 module.exports = function (router) {
@@ -21,7 +20,6 @@ module.exports = function (router) {
     auth.verifyToken,
     rules.showRules,
     rules.verifyRules,
-    customPolicy.pdfAccessValidator,
     pdfController.show
   );
 

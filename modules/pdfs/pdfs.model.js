@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.PdfPreviews, { as: 'previews', foreignKey: 'pdf_id' });
       this.hasMany(models.PdfCategory, { as: 'categorys', foreignKey: 'pdf_id' });
+      this.hasOne(models.User, { as: 'user', sourceKey: 'user_id', foreignKey: 'id' });
       this.belongsToMany(models.Category, {
         as: 'categories',
         through: models.PdfCategory,
@@ -101,8 +102,9 @@ module.exports = (sequelize, DataTypes) => {
       user_id: data.user.id
     };
 
-    const pdf = await Pdf.create(pdfDataPayload);
+    let pdf = await Pdf.create(pdfDataPayload);
 
+    pdf = await this.getPdf(pdf.id);
     return pdf;
   };
 
@@ -138,6 +140,7 @@ module.exports = (sequelize, DataTypes) => {
       order: sortBy,
       include: [
         { model: allModels.PdfPreviews, as: 'previews', attributes: ['image_url'] },
+        { model: allModels.User, as: 'user', attributes: ['id', 'username', 'email'] },
         {
           model: allModels.Category,
           as: 'categories',
@@ -152,17 +155,41 @@ module.exports = (sequelize, DataTypes) => {
     return pdfs;
   };
 
-  Pdf.update = async function (data) {
+  Pdf.updatePdf = async function (data) {
     const pdfData = data.body;
     const { pdfId } = data.params;
 
-    const pdf = await Pdf.findByPk(pdfId);
+    let pdf = await Pdf.findByPk(pdfId);
     pdf.title = pdfData.title;
     pdf.pdf_url = pdfData.pdf_url;
     pdf.author = pdfData.author;
     pdf.short_description = pdfData.short_description;
     pdf.access_type = pdfData.access_type;
     await pdf.save();
+
+    pdf = await this.getPdf(pdf.id);
+    return pdf;
+  };
+
+  Pdf.getPdf = async function (pdfId) {
+    const pdf = await Pdf.findOne({
+      where: {
+        id: pdfId
+      },
+      attributes: ['id', 'title', 'pdf_url', 'author', 'short_description', 'access_type'],
+      include: [
+        { model: allModels.PdfPreviews, as: 'previews', attributes: ['image_url'] },
+        { model: allModels.User, as: 'user', attributes: ['id', 'username', 'email'] },
+        {
+          model: allModels.Category,
+          as: 'categories',
+          attributes: ['name'],
+          through: {
+            attributes: []
+          }
+        }
+      ]
+    });
 
     return pdf;
   };

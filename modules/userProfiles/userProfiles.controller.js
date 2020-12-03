@@ -19,7 +19,7 @@ const update = async function (req, res) {
 
 const show = async function (req, res) {
   try {
-    const userProfile = await UserProfile.getUserProfile(req.body.user_id);
+    const userProfile = await UserProfile.getUserProfile(req.params.userId);
 
     const responseData = await serializer.userProfile(userProfile);
     return res.status(200).json({ userProfile: responseData });

@@ -40,7 +40,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   PdfPreviews.createPdfPreview = async function (data) {
-    const { pdfId, previews } = data.body;
+    const { pdfId } = data.params;
+    const { previews } = data.body;
 
     for (let i = 0; i < previews.length; i += 1) {
       const pdfPreviews = new PdfPreviews();
@@ -54,7 +55,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   PdfPreviews.updatePdfPreview = async function (data) {
-    const { pdfId, previews } = data.body;
+    const { pdfId } = data.params;
+    const { previews } = data.body;
 
     let previewsData = await this.getPreviews(pdfId);
     const oldPreviews = previewsData.filter(

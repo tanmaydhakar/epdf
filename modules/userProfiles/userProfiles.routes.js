@@ -8,7 +8,7 @@ const userProfilesController = require(path.resolve(
 
 module.exports = function (router) {
   router.patch(
-    '/api/userProfile',
+    '/api/user/:userId/userProfile',
     auth.verifyToken,
     rules.updateRules,
     rules.verifyRules,
@@ -16,7 +16,7 @@ module.exports = function (router) {
   );
 
   router.get(
-    '/api/userProfile',
+    '/api/user/:userId/userProfile',
     auth.verifyToken,
     rules.showRules,
     rules.verifyRules,

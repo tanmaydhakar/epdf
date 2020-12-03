@@ -1,18 +1,18 @@
 const path = require('path');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, param } = require('express-validator');
 
 const db = require(path.resolve('./models'));
 const { User } = db;
 
 const updateRules = [
-  body('user_id')
+  param('userId')
     .exists()
-    .withMessage('user_id does not exists')
+    .withMessage('userId does not exists')
     .custom(async (value, { req }) => {
       const user = await User.findByPk(value);
 
       if (!user) {
-        return Promise.reject(new Error('invalid user_id'));
+        return Promise.reject(new Error('invalid userId'));
       }
       if (req.user.id !== value && !req.user.roles.includes('Admin')) {
         return Promise.reject(new Error('You dont have permission to access this resource'));
@@ -78,14 +78,14 @@ const updateRules = [
 ];
 
 const showRules = [
-  body('user_id')
+  param('userId')
     .exists()
-    .withMessage('user_id does not exists')
+    .withMessage('userId does not exists')
     .custom(async (value, { req }) => {
       const user = await User.findByPk(value);
 
       if (!user) {
-        return Promise.reject(new Error('invalid user_id'));
+        return Promise.reject(new Error('invalid userId'));
       }
       if (req.user.id !== value && !req.user.roles.includes('Admin')) {
         return Promise.reject(new Error('You dont have permission to access this resource'));

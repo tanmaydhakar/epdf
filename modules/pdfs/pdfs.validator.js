@@ -110,7 +110,7 @@ const updateRules = [
       };
 
       return Pdf.findBySpecificField(field).then(pdf => {
-        if (pdf && req.params.postId !== pdf.id) {
+        if (pdf && req.params.pdfId !== pdf.id) {
           return Promise.reject(new Error('title already exists'));
         }
         return true;
@@ -128,7 +128,7 @@ const updateRules = [
       };
 
       return Pdf.findBySpecificField(field).then(pdf => {
-        if (pdf && req.params.postId !== pdf.id) {
+        if (pdf && req.params.pdfId !== pdf.id) {
           return Promise.reject(new Error('pdf_url already exists'));
         }
         return true;
