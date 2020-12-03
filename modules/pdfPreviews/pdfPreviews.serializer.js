@@ -6,7 +6,6 @@ const pdfPreviews = function (pdfPreviews) {
     const pdfPreview = pdfPreviews[i];
     pdfPreviewData.id = pdfPreview.id;
     pdfPreviewData.image_url = pdfPreview.image_url;
-    pdfPreviewData.pdf_id = pdfPreview.pdf_id;
     pdfPreviewData.id = pdfPreview.id;
     pdfPreviewData.pdf = pdfPreview.pdf;
 

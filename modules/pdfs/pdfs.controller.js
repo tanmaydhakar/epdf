@@ -22,7 +22,7 @@ const index = async function (req, res) {
     const pdfs = await Pdf.index(req);
     const responseData = await serializer.indexPdfs(pdfs);
 
-    return res.status(200).json({ pdfs: responseData });
+    return res.status(200).json({ pdfs: responseData, total: pdfs.count });
   } catch (error) {
     const errorResponse = errorHandler.getErrorMessage(error);
     return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
@@ -31,7 +31,7 @@ const index = async function (req, res) {
 
 const show = async function (req, res) {
   try {
-    const pdf = await Pdf.findByPk(req.params.pdfId);
+    const pdf = await Pdf.getPdf(req.params.pdfId);
     const responseData = await serializer.pdf(pdf);
 
     return res.status(201).json({ pdf: responseData });
@@ -43,7 +43,7 @@ const show = async function (req, res) {
 
 const update = async function (req, res) {
   try {
-    const pdf = await Pdf.update(req);
+    const pdf = await Pdf.updatePdf(req);
     const responseData = await serializer.pdf(pdf);
 
     return res.status(200).json({ pdf: responseData });

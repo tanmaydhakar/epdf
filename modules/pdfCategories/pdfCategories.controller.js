@@ -7,7 +7,7 @@ const { PdfCategory } = db;
 
 const show = async function (req, res) {
   try {
-    const pdfCategories = await PdfCategory.getPdfCategories(req.body.pdfId);
+    const pdfCategories = await PdfCategory.getPdfCategories(req.params.pdfId);
 
     const responseData = await serializer.pdfCategories(pdfCategories);
     return res.status(201).json({ pdfCategories: responseData });

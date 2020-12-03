@@ -59,7 +59,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   PdfCategory.createPdfCategories = async function (data) {
-    const { categories, pdfId } = data.body;
+    const { pdfId } = data.params;
+    const { categories } = data.body;
 
     const categoriesData = await this.getCategoriesId(categories);
 
@@ -76,7 +77,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   PdfCategory.updatePdfCategories = async function (data) {
-    const { categories, pdfId } = data.body;
+    const { pdfId } = data.params;
+    const { categories } = data.body;
 
     const pdf = await allModels.Pdf.findByPk(pdfId);
     const categoriesData = await this.getCategoriesId(categories);
@@ -96,7 +98,7 @@ module.exports = (sequelize, DataTypes) => {
         {
           model: allModels.Category,
           as: 'category',
-          attributes: ['name']
+          attributes: ['id', 'name']
         },
         {
           model: allModels.Pdf,

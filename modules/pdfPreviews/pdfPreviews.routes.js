@@ -6,7 +6,7 @@ const pdfPreviewController = require(path.resolve('./modules/pdfPreviews/pdfPrev
 
 module.exports = function (router) {
   router.get(
-    '/api/pdfPreview',
+    '/api/pdf/:pdfId/pdfPreview',
     auth.verifyToken,
     rules.getRules,
     rules.verifyRules,
@@ -14,7 +14,7 @@ module.exports = function (router) {
   );
 
   router.post(
-    '/api/pdfPreview',
+    '/api/pdf/:pdfId/pdfPreview',
     auth.verifyToken,
     rules.createRules,
     rules.verifyRules,
@@ -22,7 +22,7 @@ module.exports = function (router) {
   );
 
   router.patch(
-    '/api/pdfPreview',
+    '/api/pdf/:pdfId/pdfPreview',
     auth.verifyToken,
     rules.updateRules,
     rules.verifyRules,

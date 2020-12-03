@@ -8,7 +8,7 @@ const pdfCategoriesController = require(path.resolve(
 
 module.exports = function (router) {
   router.get(
-    '/api/pdfCategories',
+    '/api/pdf/:pdfId/pdfCategories',
     auth.verifyToken,
     rules.getRules,
     rules.verifyRules,
@@ -16,7 +16,7 @@ module.exports = function (router) {
   );
 
   router.post(
-    '/api/pdfCategories',
+    '/api/pdf/:pdfId/pdfCategories',
     auth.verifyToken,
     rules.createRules,
     rules.verifyRules,
@@ -24,7 +24,7 @@ module.exports = function (router) {
   );
 
   router.patch(
-    '/api/pdfCategories',
+    '/api/pdf/:pdfId/pdfCategories',
     auth.verifyToken,
     rules.updateRules,
     rules.verifyRules,
