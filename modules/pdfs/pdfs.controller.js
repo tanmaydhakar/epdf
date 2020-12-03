@@ -22,7 +22,7 @@ const index = async function (req, res) {
     const pdfs = await Pdf.index(req);
     const responseData = await serializer.indexPdfs(pdfs);
 
-    return res.status(200).json({ pdfs: responseData });
+    return res.status(200).json({ pdfs: responseData, total: pdfs.count });
   } catch (error) {
     const errorResponse = errorHandler.getErrorMessage(error);
     return res.status(errorResponse.statusCode).json({ message: errorResponse.message });

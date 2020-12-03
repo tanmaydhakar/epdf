@@ -17,9 +17,9 @@ const pdf = function (pdf) {
 const indexPdfs = function (pdfs) {
   const finalPdfsData = [];
 
-  for (i = 0; i <= pdfs.length - 1; i += 1) {
+  for (i = 0; i <= pdfs.rows.length - 1; i += 1) {
     const pdfData = {};
-    const pdf = pdfs[i];
+    const pdf = pdfs.rows[i];
     pdfData.id = pdf.id;
     pdfData.title = pdf.title;
     pdfData.pdf_url = pdf.pdf_url;

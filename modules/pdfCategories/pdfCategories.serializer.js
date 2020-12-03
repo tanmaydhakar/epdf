@@ -6,8 +6,8 @@ const pdfCategories = async function (pdfCategories) {
     const pdfcategory = pdfCategories[i];
 
     pdfcategoryData.id = pdfcategory.id;
-    pdfcategoryData.pdf = pdfcategory.pdf;
     pdfcategoryData.category = pdfcategory.category;
+    pdfcategoryData.pdf = pdfcategory.pdf;
 
     finalPdfCategoriesData.push(pdfcategoryData);
   }

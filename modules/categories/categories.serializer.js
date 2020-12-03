@@ -1,8 +1,8 @@
 const categories = async function (categories) {
   const finalCategories = [];
 
-  for (let i = 0; i < categories.length; i += 1) {
-    const category = categories[i];
+  for (let i = 0; i < categories.rows.length; i += 1) {
+    const category = categories.rows[i];
     const categoryData = {};
 
     categoryData.id = category.id;

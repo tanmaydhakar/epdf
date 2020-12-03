@@ -10,7 +10,7 @@ const index = async function (req, res) {
     const categories = await Category.getCategories(req);
 
     const responseData = await serializer.categories(categories);
-    return res.status(200).json({ categories: responseData });
+    return res.status(200).json({ categories: responseData, total: categories.count });
   } catch (error) {
     const errorResponse = errorHandler.getErrorMessage(error);
     return res.status(errorResponse.statusCode).json({ message: errorResponse.message });

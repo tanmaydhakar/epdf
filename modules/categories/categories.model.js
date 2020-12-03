@@ -1,4 +1,4 @@
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
@@ -35,17 +35,32 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Category.getCategories = async function (data) {
-    const wherestatement = {};
+    const { name, sort } = data.query;
+    let { page } = data.query;
+
+    page = page && !isNaN(page) ? parseInt(page) - 1 : 0;
+    const limit = 10;
+    const offset = page * limit;
+    const whereStatement = {};
     const sortBy = [];
 
-    if (data.query.sort === 'name') {
+    if (sort && sort === 'name') {
       sortBy.push(['name', 'asc']);
     } else {
       sortBy.push(['updatedAt', 'desc']);
     }
-    const categories = await Category.findAll({
-      where: wherestatement,
+
+    if (name) {
+      whereStatement.name = {
+        [Op.like]: `${name}%`
+      };
+    }
+
+    const categories = await Category.findAndCountAll({
+      where: whereStatement,
       order: sortBy,
+      offset,
+      limit,
       attributes: ['id', 'name'],
       raw: true
     });

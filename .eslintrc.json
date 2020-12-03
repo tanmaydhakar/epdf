@@ -20,6 +20,8 @@
     "no-await-in-loop": "off",
     "no-underscore-dangle": "off",
     "global-require": "off",
-    "no-shadow": "warn"
+    "no-shadow": "warn",
+    "no-restricted-globals": "warn",
+    "radix": "off"
   }
 }

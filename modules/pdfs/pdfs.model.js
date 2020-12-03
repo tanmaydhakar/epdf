@@ -109,6 +109,12 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Pdf.index = async function (data) {
+    const { author, title, sort } = data.query;
+    let { page } = data.query;
+
+    page = page && !isNaN(page) ? parseInt(page) - 1 : 0;
+    const limit = 10;
+    const offset = page * limit;
     let whereStatement;
     const sortBy = [];
 
@@ -127,17 +133,30 @@ module.exports = (sequelize, DataTypes) => {
       whereStatement = {};
     }
 
-    if (data.query.sort === 'title') {
+    if (title) {
+      whereStatement.title = {
+        [Op.like]: `${title}%`
+      };
+    }
+    if (author) {
+      whereStatement.author = {
+        [Op.like]: `${author}%`
+      };
+    }
+
+    if (sort && sort === 'title') {
       sortBy.push(['title', 'asc']);
-    } else if (data.query.sort === 'author') {
+    } else if (sort && sort === 'author') {
       sortBy.push(['author', 'asc']);
     } else {
       sortBy.push(['createdAt', 'desc']);
     }
 
-    const pdfs = await Pdf.findAll({
+    const pdfs = await Pdf.findAndCountAll({
       where: whereStatement,
       order: sortBy,
+      offset,
+      limit,
       include: [
         { model: allModels.PdfPreviews, as: 'previews', attributes: ['image_url'] },
         { model: allModels.User, as: 'user', attributes: ['id', 'username', 'email'] },
@@ -151,7 +170,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       ]
     });
-
     return pdfs;
   };
 
