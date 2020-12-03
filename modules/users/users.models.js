@@ -6,8 +6,9 @@ let allModels;
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      this.hasMany(models.UserRole, { as: 'userRole', foreignKey: 'user_id' });
-      this.hasMany(models.UserProfile, { as: 'userProfile', foreignKey: 'user_id' });
+      this.hasMany(models.UserRole, { as: 'userRoles', foreignKey: 'user_id' });
+      this.hasOne(models.UserProfile, { as: 'userProfile', foreignKey: 'user_id' });
+      this.hasMany(models.Pdf, { as: 'pdfs', foreignKey: 'user_id' });
       this.belongsToMany(models.Role, {
         as: 'roles',
         through: models.UserRole,
@@ -53,6 +54,25 @@ module.exports = (sequelize, DataTypes) => {
       model.password = encryptedPassword;
       return resolve(null, options);
     });
+  });
+
+  User.beforeDestroy(async user => {
+    const pdfs = await user.getPdfs();
+    if (pdfs.length) {
+      for (let i = 0; i < pdfs.length; i += 1) {
+        await pdfs[i].destroy();
+      }
+    }
+
+    const userRoles = await user.getUserRoles();
+    if (userRoles.length) {
+      for (let i = 0; i < userRoles.length; i += 1) {
+        await userRoles[i].destroy();
+      }
+    }
+
+    const userProfile = await user.getUserProfile();
+    await userProfile.destroy();
   });
 
   User.registerModels = function (models) {

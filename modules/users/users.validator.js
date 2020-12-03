@@ -1,7 +1,7 @@
 const path = require('path');
 
 const db = require(path.resolve('./models'));
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, param } = require('express-validator');
 
 const { User, Role } = db;
 
@@ -101,6 +101,24 @@ const loginRules = [
     .withMessage('password should not be empty')
 ];
 
+const destroyRules = [
+  param('userId').custom(async value => {
+    const user = await User.findByPk(value);
+    if (!user) {
+      return Promise.reject(new Error('userId is invalid'));
+    }
+    const roles = await user.getRoles();
+
+    if (roles.length) {
+      const isAdmin = roles.find(role => role.name === 'Admin');
+      if (isAdmin) {
+        return Promise.reject(new Error('admin can not be deleted'));
+      }
+    }
+    return true;
+  })
+];
+
 const verifyRules = function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -113,5 +131,6 @@ const verifyRules = function (req, res, next) {
 module.exports = {
   verifyRules,
   registerRules,
-  loginRules
+  loginRules,
+  destroyRules
 };

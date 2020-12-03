@@ -44,7 +44,20 @@ const signin = async function (req, res) {
   }
 };
 
+const destroy = async function (req, res) {
+  try {
+    const user = await User.findByPk(req.params.userId);
+    await user.destroy();
+
+    return res.status(200).json({ status: 'user has been deleted successfully' });
+  } catch (error) {
+    const errorResponse = errorHandler.getErrorMessage(error);
+    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
+  }
+};
+
 module.exports = {
   register,
-  signin
+  signin,
+  destroy
 };

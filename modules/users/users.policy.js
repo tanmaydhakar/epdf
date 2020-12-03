@@ -14,7 +14,8 @@ exports.invokeRolesPolicies = function () {
         {
           resources: '/api/register',
           permissions: ['post']
-        }
+        },
+        { resources: '/api/user/:userId', permissions: ['delete'] }
       ]
     },
     {
