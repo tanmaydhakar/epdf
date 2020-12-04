@@ -23,6 +23,8 @@
     "no-shadow": "warn",
     "no-restricted-globals": "warn",
     "radix": "off",
-    "new-cap": "warn"
+    "new-cap": "warn",
+    "guard-for-in": "off",
+    "no-restricted-syntax": "off"
   }
 }
