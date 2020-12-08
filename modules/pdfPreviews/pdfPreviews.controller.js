@@ -1,44 +1,28 @@
 const path = require('path');
 
-const errorHandler = require(path.resolve('./utilities/errorHandler'));
 const serializer = require(path.resolve('./modules/pdfPreviews/pdfPreviews.serializer'));
 const db = require(path.resolve('./models'));
 const { PdfPreviews } = db;
 
 const show = async function (req, res) {
-  try {
-    const pdfPreviewsData = await PdfPreviews.getPreviews(req.params.pdfId);
+  const pdfPreviewsData = await PdfPreviews.getPreviews(req.params.pdfId);
 
-    const responseData = await serializer.pdfPreviews(pdfPreviewsData);
-    return res.status(201).json({ pdfPreviews: responseData });
-  } catch (error) {
-    const errorResponse = errorHandler.getErrorMessage(error);
-    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
-  }
+  const responseData = await serializer.pdfPreviews(pdfPreviewsData);
+  return res.status(200).json({ pdfPreviews: responseData });
 };
 
 const create = async function (req, res) {
-  try {
-    const pdfPreviewsData = await PdfPreviews.createPdfPreview(req);
+  const pdfPreviewsData = await PdfPreviews.createPdfPreview(req);
 
-    const responseData = await serializer.pdfPreviews(pdfPreviewsData);
-    return res.status(201).json({ pdfPreviews: responseData });
-  } catch (error) {
-    const errorResponse = errorHandler.getErrorMessage(error);
-    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
-  }
+  const responseData = await serializer.pdfPreviews(pdfPreviewsData);
+  return res.status(201).json({ pdfPreviews: responseData });
 };
 
 const update = async function (req, res) {
-  try {
-    const pdfPreviewsData = await PdfPreviews.updatePdfPreview(req);
+  const pdfPreviewsData = await PdfPreviews.updatePdfPreview(req);
 
-    const responseData = await serializer.pdfPreviews(pdfPreviewsData);
-    return res.status(201).json({ pdfPreviews: responseData });
-  } catch (error) {
-    const errorResponse = errorHandler.getErrorMessage(error);
-    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
-  }
+  const responseData = await serializer.pdfPreviews(pdfPreviewsData);
+  return res.status(200).json({ pdfPreviews: responseData });
 };
 
 module.exports = {

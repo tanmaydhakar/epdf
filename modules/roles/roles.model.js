@@ -1,4 +1,4 @@
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
@@ -34,6 +34,40 @@ module.exports = (sequelize, DataTypes) => {
 
     const role = await Role.findOne(queryOptions);
     return role;
+  };
+
+  Role.getRoles = async function (data) {
+    const { name, sort } = data.query;
+    let { page } = data.query;
+
+    page = page && !isNaN(page) && parseInt(page) > 0 ? parseInt(page) - 1 : 0;
+    const limit = 10;
+    const offset = page * limit;
+    const whereStatement = {};
+    const sortBy = [];
+
+    if (sort && sort === 'name') {
+      sortBy.push(['name', 'asc']);
+    } else {
+      sortBy.push(['updatedAt', 'desc']);
+    }
+
+    if (name) {
+      whereStatement.name = {
+        [Op.like]: `${name}%`
+      };
+    }
+
+    const roles = await Role.findAndCountAll({
+      where: whereStatement,
+      order: sortBy,
+      offset,
+      limit,
+      attributes: ['id', 'name'],
+      raw: true
+    });
+
+    return roles;
   };
 
   return Role;

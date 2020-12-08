@@ -25,15 +25,11 @@ const setupConfigs = function () {
  * @returns {Promise} resolve - returns the express router instance
  * */
 const setupRoutes = function () {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const resisterRoutesPromise = require(path.resolve('./register')).registerRoutes(expressRouter);
-    resisterRoutesPromise
-      .then(routerInstance => {
-        return resolve(routerInstance);
-      })
-      .catch(err => {
-        return reject(err);
-      });
+    resisterRoutesPromise.then(routerInstance => {
+      return resolve(routerInstance);
+    });
   });
 };
 
@@ -42,15 +38,11 @@ const setupRoutes = function () {
  * @returns {Promise} resolve - returns the success state of promise
  * */
 const setupPolicies = function () {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const resisterRoutesPromise = require(path.resolve('./register')).registerPolicies();
-    resisterRoutesPromise
-      .then(() => {
-        return resolve();
-      })
-      .catch(err => {
-        return reject(err);
-      });
+    resisterRoutesPromise.then(() => {
+      return resolve();
+    });
   });
 };
 

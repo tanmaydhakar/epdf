@@ -180,7 +180,7 @@ const showRules = [
     if (
       pdf.access_type !== 'Public' &&
       pdf.user_id !== req.user.id &&
-      !pdf.user.roles.includes('Admin')
+      !req.user.roles.includes('Admin')
     ) {
       return Promise.reject(new Error('user is unauthorized to access this resource'));
     }

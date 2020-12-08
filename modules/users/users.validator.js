@@ -64,16 +64,21 @@ const registerRules = [
     .matches(/[-+_!@#$%^&*.,?]/, 'i')
     .withMessage('Password should contain atleast one special character'),
 
-  body('role').custom(async value => {
+  body('roles').custom(async value => {
     if (!value) {
       return true;
     }
-    const field = {
-      name: value
-    };
-    const role = await Role.findBySpecificField(field);
-    if (!role || role.name === 'Admin') {
-      return Promise.reject(new Error('role is invalid'));
+    if (!Array.isArray(value)) {
+      return Promise.reject(new Error('roles must be type array'));
+    }
+    for (let i = 0; i < value.length; i += 1) {
+      const field = {
+        name: value[i]
+      };
+      const role = await Role.findBySpecificField(field);
+      if (!role || role.name === 'Admin') {
+        return Promise.reject(new Error('role is invalid'));
+      }
     }
     return true;
   })

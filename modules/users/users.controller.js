@@ -6,21 +6,17 @@ const serializer = require(path.resolve('./modules/users/users.serializer'));
 const errorHandler = require(path.resolve('./utilities/errorHandler'));
 const auth = require(path.resolve('./utilities/auth'));
 const { User } = db;
+const err = new Error();
 
 const register = async function (req, res) {
-  try {
-    const user = new User();
-    user.username = req.body.username;
-    user.email = req.body.email;
-    user.password = req.body.password;
-    await user.save({ role: req.body.role });
+  const user = new User();
+  user.username = req.body.username;
+  user.email = req.body.email;
+  user.password = req.body.password;
+  await user.save({ roles: req.body.roles });
 
-    const responseData = await serializer.registerUser(user);
-    return res.status(200).json({ user: responseData });
-  } catch (error) {
-    const errorResponse = errorHandler.getErrorMessage(error);
-    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
-  }
+  const responseData = await serializer.registerUser(user);
+  return res.status(200).json({ user: responseData });
 };
 
 const signin = async function (req, res) {
@@ -45,15 +41,10 @@ const signin = async function (req, res) {
 };
 
 const destroy = async function (req, res) {
-  try {
-    const user = await User.findByPk(req.params.userId);
-    await user.destroy();
+  const user = await User.findByPk(req.params.userId);
+  await user.destroy();
 
-    return res.status(200).json({ status: 'user has been deleted successfully' });
-  } catch (error) {
-    const errorResponse = errorHandler.getErrorMessage(error);
-    return res.status(errorResponse.statusCode).json({ message: errorResponse.message });
-  }
+  return res.status(200).json({ status: 'user has been deleted successfully' });
 };
 
 module.exports = {

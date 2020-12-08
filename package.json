@@ -17,6 +17,13 @@
   "bugs": {
     "url": "https://github.com/tanmaygkmit/epdf/issues"
   },
+  "nyc": {
+    "exclude": [
+      "modules/*/*.policy.js",
+      "models.js",
+      "tests"
+    ]
+  },
   "homepage": "https://github.com/tanmaygkmit/epdf#readme",
   "dependencies": {
     "acl": "^0.4.11",

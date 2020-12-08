@@ -48,7 +48,7 @@ const createRules = [
       }
       for (let i = 0; i <= value.length - 1; i += 1) {
         if (typeof value[i] !== 'string') {
-          return Promise.reject(new Error('invalid category'));
+          return Promise.reject(new Error('invalid preview'));
         }
       }
       return true;

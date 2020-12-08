@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     const { name, sort } = data.query;
     let { page } = data.query;
 
-    page = page && !isNaN(page) ? parseInt(page) - 1 : 0;
+    page = page && !isNaN(page) && parseInt(page) > 0 ? parseInt(page) - 1 : 0;
     const limit = 10;
     const offset = page * limit;
     const whereStatement = {};

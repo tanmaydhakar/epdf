@@ -81,16 +81,18 @@ module.exports = (sequelize, DataTypes) => {
 
   User.afterCreate(async (user, options) => {
     const { Role, UserRole, UserProfile } = allModels;
+    const roles = options.roles && options.roles.length ? options.roles : ['Reader'];
 
-    const field = {};
-    field.name = options.role ? options.role : 'Reader';
+    for (let i = 0; i < roles.length; i += 1) {
+      const field = {};
+      field.name = roles[i];
+      const role = await Role.findBySpecificField(field);
 
-    const role = await Role.findBySpecificField(field);
-
-    const userRole = new UserRole();
-    userRole.user_id = user.id;
-    userRole.role_id = role.id;
-    await userRole.save();
+      const userRole = new UserRole();
+      userRole.user_id = user.id;
+      userRole.role_id = role.id;
+      await userRole.save();
+    }
 
     const userProfile = new UserProfile();
     userProfile.user_id = user.id;
