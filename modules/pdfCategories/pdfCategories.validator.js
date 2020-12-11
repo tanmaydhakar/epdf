@@ -1,8 +1,8 @@
 const path = require('path');
-const { body, validationResult, param } = require('express-validator');
+const { validationResult, param } = require('express-validator');
 
 const db = require(path.resolve('./models'));
-const { Pdf, Category } = db;
+const { Pdf } = db;
 
 const getRules = [
   param('pdfId')
@@ -15,80 +15,6 @@ const getRules = [
       }
       if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
         return Promise.reject(new Error('user is unauthorized to access this resource'));
-      }
-      return true;
-    })
-];
-
-const createRules = [
-  param('pdfId')
-    .exists()
-    .withMessage('pdfId does not exists')
-    .custom(async (value, { req }) => {
-      const pdf = await Pdf.findByPk(value);
-      if (!pdf) {
-        return Promise.reject(new Error('invalid pdfId'));
-      }
-      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
-        return Promise.reject(new Error('user is unauthorized to access this resource'));
-      }
-      const categories = await pdf.getCategorys();
-      if (categories.length) {
-        return Promise.reject(new Error('categories already exists for this pdf'));
-      }
-      return true;
-    }),
-
-  body('categories')
-    .exists()
-    .withMessage('categories does not exists')
-    .custom(async value => {
-      if (!Array.isArray(value)) {
-        return Promise.reject(new Error('categories must be array'));
-      }
-      for (let i = 0; i <= value.length - 1; i += 1) {
-        const field = {
-          name: value[i]
-        };
-        const category = await Category.findBySpecificField(field);
-        if (!category) {
-          return Promise.reject(new Error('invalid category'));
-        }
-      }
-      return true;
-    })
-];
-
-const updateRules = [
-  param('pdfId')
-    .exists()
-    .withMessage('pdfId does not exists')
-    .custom(async (value, { req }) => {
-      const pdf = await Pdf.findByPk(value);
-      if (!pdf) {
-        return Promise.reject(new Error('invalid pdfId'));
-      }
-      if (pdf.user_id !== req.user.id && !req.user.roles.includes('Admin')) {
-        return Promise.reject(new Error('user is unauthorized to access this resource'));
-      }
-      return true;
-    }),
-
-  body('categories')
-    .exists()
-    .withMessage('categories does not exists')
-    .custom(async value => {
-      if (!Array.isArray(value)) {
-        return Promise.reject(new Error('categories must be array'));
-      }
-      for (let i = 0; i <= value.length - 1; i += 1) {
-        const field = {
-          name: value[i]
-        };
-        const category = await Category.findBySpecificField(field);
-        if (!category) {
-          return Promise.reject(new Error('invalid category'));
-        }
       }
       return true;
     })
@@ -108,7 +34,5 @@ const verifyRules = function (req, res, next) {
 
 module.exports = {
   verifyRules,
-  getRules,
-  createRules,
-  updateRules
+  getRules
 };

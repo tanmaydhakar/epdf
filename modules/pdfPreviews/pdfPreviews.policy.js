@@ -9,7 +9,7 @@ exports.invokeRolesPolicies = function () {
       allows: [
         {
           resources: '/api/pdf/:pdfId/pdfPreview',
-          permissions: ['get', 'post', 'patch']
+          permissions: ['get']
         }
       ]
     },
@@ -18,7 +18,7 @@ exports.invokeRolesPolicies = function () {
       allows: [
         {
           resources: '/api/pdf/:pdfId/pdfPreview',
-          permissions: ['get', 'post', 'patch']
+          permissions: ['get']
         }
       ]
     },

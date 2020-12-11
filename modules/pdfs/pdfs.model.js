@@ -91,18 +91,44 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Pdf.createPdf = async function (data) {
-    const pdfData = data.body;
+    const {
+      title,
+      pdf_url,
+      author,
+      short_description,
+      access_type,
+      categories,
+      previews
+    } = data.body;
 
     const pdfDataPayload = {
-      title: pdfData.title,
-      pdf_url: pdfData.pdf_url,
-      author: pdfData.author,
-      short_description: pdfData.short_description,
-      access_type: pdfData.access_type,
+      title,
+      pdf_url,
+      author,
+      short_description,
+      access_type,
       user_id: data.user.id
     };
 
     let pdf = await Pdf.create(pdfDataPayload);
+
+    for (let i = 0; i < previews.length; i += 1) {
+      const pdfPreview = new allModels.PdfPreviews();
+
+      pdfPreview.image_url = previews[i];
+      pdfPreview.pdf_id = pdf.id;
+      await pdfPreview.save();
+    }
+
+    const categoriesData = await allModels.PdfCategory.getCategoriesId(categories);
+
+    for (let i = 0; i <= categoriesData.length - 1; i += 1) {
+      const pdfCategory = new allModels.PdfCategory();
+      pdfCategory.pdf_id = pdf.id;
+      pdfCategory.category_id = categoriesData[i].id;
+
+      await pdfCategory.save();
+    }
 
     pdf = await this.getPdf(pdf.id);
     return pdf;
@@ -174,16 +200,48 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Pdf.updatePdf = async function (data) {
-    const pdfData = data.body;
     const { pdfId } = data.params;
+    const {
+      title,
+      pdf_url,
+      author,
+      short_description,
+      access_type,
+      previews,
+      categories
+    } = data.body;
 
     let pdf = await Pdf.findByPk(pdfId);
-    pdf.title = pdfData.title;
-    pdf.pdf_url = pdfData.pdf_url;
-    pdf.author = pdfData.author;
-    pdf.short_description = pdfData.short_description;
-    pdf.access_type = pdfData.access_type;
+    pdf.title = title;
+    pdf.pdf_url = pdf_url;
+    pdf.author = author;
+    pdf.short_description = short_description;
+    pdf.access_type = access_type;
     await pdf.save();
+
+    const previewsData = await pdf.getPreviews();
+    const oldPreviews = previewsData.filter(
+      previewObject => !previews.includes(previewObject.image_url)
+    );
+
+    for (let i = 0; i < oldPreviews.length; i += 1) {
+      await oldPreviews[i].destroy();
+    }
+    for (let i = 0; i < previews.length; i += 1) {
+      await allModels.PdfPreviews.findOrCreate({
+        where: {
+          image_url: previews[i],
+          pdf_id: pdfId
+        },
+        defaults: {
+          image_url: previews[i],
+          pdf_id: pdfId
+        }
+      });
+    }
+
+    const categoriesData = await allModels.PdfCategory.getCategoriesId(categories);
+    await pdf.setCategories(categoriesData);
 
     pdf = await this.getPdf(pdf.id);
     return pdf;

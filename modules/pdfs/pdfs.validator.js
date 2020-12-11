@@ -2,7 +2,7 @@ const path = require('path');
 const { body, validationResult, param } = require('express-validator');
 
 const db = require(path.resolve('./models'));
-const { Pdf } = db;
+const { Pdf, Category } = db;
 const accessTypeEnum = ['Public', 'Private'];
 
 const createRules = [
@@ -78,6 +78,40 @@ const createRules = [
     .custom(value => {
       if (!accessTypeEnum.includes(value)) {
         return Promise.reject(new Error('invalid access_type'));
+      }
+      return true;
+    }),
+
+  body('previews')
+    .exists()
+    .withMessage('previews does not exists')
+    .custom(async value => {
+      if (!Array.isArray(value)) {
+        return Promise.reject(new Error('categories must be array'));
+      }
+      for (let i = 0; i <= value.length - 1; i += 1) {
+        if (typeof value[i] !== 'string') {
+          return Promise.reject(new Error('invalid preview'));
+        }
+      }
+      return true;
+    }),
+
+  body('categories')
+    .exists()
+    .withMessage('categories does not exists')
+    .custom(async value => {
+      if (!Array.isArray(value)) {
+        return Promise.reject(new Error('categories must be array'));
+      }
+      for (let i = 0; i <= value.length - 1; i += 1) {
+        const field = {
+          name: value[i]
+        };
+        const category = await Category.findBySpecificField(field);
+        if (!category) {
+          return Promise.reject(new Error('invalid category'));
+        }
       }
       return true;
     })
@@ -166,6 +200,40 @@ const updateRules = [
     .custom(value => {
       if (!accessTypeEnum.includes(value)) {
         return Promise.reject(new Error('invalid access_type'));
+      }
+      return true;
+    }),
+
+  body('previews')
+    .exists()
+    .withMessage('previews does not exists')
+    .custom(async value => {
+      if (!Array.isArray(value)) {
+        return Promise.reject(new Error('previews must be array'));
+      }
+      for (let i = 0; i <= value.length - 1; i += 1) {
+        if (typeof value[i] !== 'string') {
+          return Promise.reject(new Error('previews must contain only string'));
+        }
+      }
+      return true;
+    }),
+
+  body('categories')
+    .exists()
+    .withMessage('categories does not exists')
+    .custom(async value => {
+      if (!Array.isArray(value)) {
+        return Promise.reject(new Error('categories must be array'));
+      }
+      for (let i = 0; i <= value.length - 1; i += 1) {
+        const field = {
+          name: value[i]
+        };
+        const category = await Category.findBySpecificField(field);
+        if (!category) {
+          return Promise.reject(new Error('invalid category'));
+        }
       }
       return true;
     })
