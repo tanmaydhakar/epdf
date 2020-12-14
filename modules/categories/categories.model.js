@@ -98,5 +98,11 @@ module.exports = (sequelize, DataTypes) => {
     return category;
   };
 
+  Category.getCount = async function () {
+    const categoriesCount = await Category.count();
+
+    return categoriesCount;
+  };
+
   return Category;
 };

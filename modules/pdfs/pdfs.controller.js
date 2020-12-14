@@ -39,10 +39,17 @@ const destroy = async function (req, res) {
   return res.status(200).json({ status: 'Pdf has been deleted successfully' });
 };
 
+const count = async function (req, res) {
+  const pdfCount = await Pdf.getCount(req);
+
+  return res.status(200).json({ count: pdfCount });
+};
+
 module.exports = {
   create,
   index,
   show,
   update,
-  destroy
+  destroy,
+  count
 };

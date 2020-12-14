@@ -43,4 +43,6 @@ module.exports = function (router) {
     rules.verifyRules,
     pdfController.destroy
   );
+
+  router.get('/api/pdf-count', auth.verifyToken, pdfPolicy.isAllowed, pdfController.count);
 };

@@ -31,9 +31,16 @@ const destroy = async function (req, res) {
   return res.status(200).json({ status: 'category has been deleted successfully' });
 };
 
+const count = async function (req, res) {
+  const categoriesCount = await Category.getCount();
+
+  return res.status(200).json({ count: categoriesCount });
+};
+
 module.exports = {
   index,
   add,
   update,
-  destroy
+  destroy,
+  count
 };

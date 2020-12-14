@@ -18,6 +18,10 @@ exports.invokeRolesPolicies = function () {
         {
           resources: '/api/pdf/:pdfId',
           permissions: ['get', 'delete', 'patch']
+        },
+        {
+          resources: '/api/pdf-count',
+          permissions: ['get']
         }
       ]
     },
@@ -35,6 +39,10 @@ exports.invokeRolesPolicies = function () {
         {
           resources: '/api/pdf/:pdfId',
           permissions: ['get', 'delete', 'patch']
+        },
+        {
+          resources: '/api/pdf-count',
+          permissions: ['get']
         }
       ]
     },

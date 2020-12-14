@@ -14,6 +14,10 @@ exports.invokeRolesPolicies = function () {
         {
           resources: '/api/categories/:categoryId',
           permissions: ['patch', 'delete']
+        },
+        {
+          resources: '/api/categories-count',
+          permissions: ['get']
         }
       ]
     },
@@ -27,6 +31,10 @@ exports.invokeRolesPolicies = function () {
         {
           resources: '/api/categories/:categoryId',
           permissions: ['patch', 'delete']
+        },
+        {
+          resources: '/api/categories-count',
+          permissions: ['get']
         }
       ]
     },

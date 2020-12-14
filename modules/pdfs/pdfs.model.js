@@ -212,5 +212,35 @@ module.exports = (sequelize, DataTypes) => {
     return pdf;
   };
 
+  Pdf.getCount = async function (data) {
+    const { category, author } = data.query;
+    const whereStatement = {};
+
+    if (category) {
+      whereStatement['$categories.name$'] = category;
+    }
+
+    if (author) {
+      whereStatement.author = author;
+    }
+
+    const pdfCount = await Pdf.count({
+      where: whereStatement,
+      subQuery: false,
+      include: [
+        {
+          model: allModels.Category,
+          as: 'categories',
+          attributes: ['name'],
+          through: {
+            attributes: []
+          }
+        }
+      ]
+    });
+
+    return pdfCount;
+  };
+
   return Pdf;
 };
