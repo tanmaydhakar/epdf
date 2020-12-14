@@ -59,6 +59,8 @@ module.exports = function () {
         const author = faker.name.findName();
         const short_description = faker.random.words(60);
         const access_type = 'Private';
+        const previews = ['https://host.com/images1'];
+        const categories = ['Fiction'];
 
         chai
           .request(apiBase)
@@ -69,7 +71,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            previews,
+            categories
           })
           .then(pdfData1 => {
             pdfResponse1 = pdfData1.body.pdf;
@@ -82,6 +86,8 @@ module.exports = function () {
               const author2 = faker.name.findName();
               const short_description2 = faker.random.words(60);
               const access_type2 = 'Private';
+              const previews2 = ['https://host.com/images2'];
+              const categories2 = ['Fiction'];
 
               chai
                 .request(apiBase)
@@ -92,7 +98,9 @@ module.exports = function () {
                   author: author2,
                   pdf_url: pdf_url2,
                   title: title2,
-                  access_type: access_type2
+                  access_type: access_type2,
+                  previews: previews2,
+                  categories: categories2
                 })
                 .then(() => {
                   return done();
@@ -105,7 +113,7 @@ module.exports = function () {
     it('fail: get with invalid pdf id', done => {
       chai
         .request(apiBase)
-        .get(`/api/pdf/${randomUuid}/pdfPreview`)
+        .get(`/api/pdf/${randomUuid}/pdfPreviews`)
         .set('Authorization', `Bearer ${user1.token}`)
         .then(res => {
           expect(res.statusCode).to.equal(422);
@@ -118,83 +126,12 @@ module.exports = function () {
     it('fail: get with unauthorized pdf id', done => {
       chai
         .request(apiBase)
-        .get(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
+        .get(`/api/pdf/${pdfResponse1.id}/pdfPreviews`)
         .set('Authorization', `Bearer ${user2.token}`)
         .then(res => {
           expect(res.statusCode).to.equal(403);
           expect(res.body).to.have.property('message');
           expect(res.body.message.msg).to.equal('user is unauthorized to access this resource');
-          done();
-        });
-    });
-
-    it('fail: post with invalid pdf id', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${randomUuid}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid pdfId');
-          done();
-        });
-    });
-
-    it('fail: post with unauthorized pdf id', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user2.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(403);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('user is unauthorized to access this resource');
-          done();
-        });
-    });
-
-    it('fail: create previews with invalid value', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          previews: ['https://host.com/images1', 123]
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid preview');
-          done();
-        });
-    });
-
-    it('success: create previews for pdf', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          previews: ['https://host.com/images1']
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(201);
-          expect(res.body).to.have.property('pdfPreviews');
-          expect(res.body.pdfPreviews.length).to.equal(1);
-          const preview = res.body.pdfPreviews[0];
-          expect(preview).to.have.property('id');
-          expect(preview).to.have.property('image_url').to.equal('https://host.com/images1');
-          expect(preview).to.have.property('pdf');
-          expect(Object.keys(preview.pdf)).to.eql([
-            'id',
-            'title',
-            'pdf_url',
-            'author',
-            'short_description',
-            'access_type',
-            'user_id'
-          ]);
           done();
         });
     });
@@ -202,7 +139,7 @@ module.exports = function () {
     it('success: get pdf previews', done => {
       chai
         .request(apiBase)
-        .get(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
+        .get(`/api/pdf/${pdfResponse1.id}/pdfPreviews`)
         .set('Authorization', `Bearer ${user1.token}`)
         .then(res => {
           expect(res.statusCode).to.equal(200);
@@ -223,93 +160,6 @@ module.exports = function () {
               ]);
             });
           }
-          done();
-        });
-    });
-
-    it('fail: again create preview for pdf', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          previews: ['https://host.com/images1']
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('previews already exists for this pdf');
-          done();
-        });
-    });
-
-    it('fail: patch with invalid pdf id', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${randomUuid}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid pdfId');
-          done();
-        });
-    });
-
-    it('fail: patch with unauthorized pdf id', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user2.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(403);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('user is unauthorized to access this resource');
-          done();
-        });
-    });
-
-    it('fail: update previews with invalid value', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          previews: ['https://host.com/images1', 123]
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('previews must contain only string');
-          done();
-        });
-    });
-
-    it('success: update previews for pdf', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${pdfResponse1.id}/pdfPreview`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          previews: ['https://host.com/images2']
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(200);
-          expect(res.body).to.have.property('pdfPreviews');
-          expect(res.body.pdfPreviews.length).to.equal(1);
-          const preview = res.body.pdfPreviews[0];
-          expect(preview).to.have.property('id');
-          expect(preview).to.have.property('image_url').to.equal('https://host.com/images2');
-          expect(preview).to.have.property('pdf');
-          expect(Object.keys(preview.pdf)).to.eql([
-            'id',
-            'title',
-            'pdf_url',
-            'author',
-            'short_description',
-            'access_type',
-            'user_id'
-          ]);
           done();
         });
     });

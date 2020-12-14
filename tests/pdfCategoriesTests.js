@@ -20,6 +20,7 @@ module.exports = function () {
     let pdfResponse1;
     const randomUuid = uuidv4();
     const categories = ['Nonfiction', 'Fiction'];
+    const previews = ['https://host.com/images1'];
 
     before(done => {
       const registerUser = function () {
@@ -70,7 +71,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            previews,
+            categories
           })
           .then(pdfData1 => {
             pdfResponse1 = pdfData1.body.pdf;
@@ -83,6 +86,8 @@ module.exports = function () {
               const author2 = faker.name.findName();
               const short_description2 = faker.random.words(60);
               const access_type2 = 'Private';
+              const previews2 = ['https://host.com/images2'];
+              const categories2 = ['Nonfiction'];
 
               chai
                 .request(apiBase)
@@ -93,7 +98,9 @@ module.exports = function () {
                   author: author2,
                   pdf_url: pdf_url2,
                   title: title2,
-                  access_type: access_type2
+                  access_type: access_type2,
+                  previews: previews2,
+                  categories: categories2
                 })
                 .then(() => {
                   return done();
@@ -129,81 +136,6 @@ module.exports = function () {
         });
     });
 
-    it('fail: post with invalid pdf id', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${randomUuid}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid pdfId');
-          done();
-        });
-    });
-
-    it('fail: post with unauthorized pdf id', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user2.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(403);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('user is unauthorized to access this resource');
-          done();
-        });
-    });
-
-    it('fail: create categories with invalid value', done => {
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          categories: ['123']
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid category');
-          done();
-        });
-    });
-
-    it('success: create categories for pdf', done => {
-      const categoryName = categories[0];
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          categories: [categoryName]
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(201);
-          expect(res.body).to.have.property('pdfCategories');
-          expect(res.body.pdfCategories.length).to.equal(1);
-          res.body.pdfCategories.forEach(categoryObj => {
-            expect(categoryObj).to.have.property('id');
-            expect(categoryObj).to.have.property('category');
-            expect(categoryObj.category).to.have.property('id');
-            expect(categoryObj.category).to.have.property('name').to.equal(categoryName);
-            expect(categoryObj).to.have.property('pdf');
-            expect(Object.keys(categoryObj.pdf)).to.eql([
-              'id',
-              'title',
-              'pdf_url',
-              'author',
-              'short_description',
-              'access_type',
-              'user_id'
-            ]);
-            done();
-          });
-        });
-    });
-
     it('success: gets pdf categories', done => {
       chai
         .request(apiBase)
@@ -231,98 +163,6 @@ module.exports = function () {
             });
           }
           done();
-        });
-    });
-
-    it('fail: again create categories for pdf', done => {
-      const categoryName = categories[0];
-      chai
-        .request(apiBase)
-        .post(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          categories: [categoryName]
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('categories already exists for this pdf');
-          done();
-        });
-    });
-
-    it('fail: patch with invalid pdf id', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${randomUuid}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid pdfId');
-          done();
-        });
-    });
-
-    it('fail: patch with unauthorized pdf id', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user2.token}`)
-        .then(res => {
-          expect(res.statusCode).to.equal(403);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('user is unauthorized to access this resource');
-          done();
-        });
-    });
-
-    it('fail: update categories with invalid value', done => {
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          categories: [categories[0], '123']
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(422);
-          expect(res.body).to.have.property('message');
-          expect(res.body.message.msg).to.equal('invalid category');
-          done();
-        });
-    });
-
-    it('success: update categories for pdf', done => {
-      const categoryName = categories[1];
-      chai
-        .request(apiBase)
-        .patch(`/api/pdf/${pdfResponse1.id}/pdfCategories`)
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-          categories: [categoryName]
-        })
-        .then(res => {
-          expect(res.statusCode).to.equal(200);
-          expect(res.body).to.have.property('pdfCategories');
-          expect(res.body.pdfCategories.length).to.equal(1);
-          res.body.pdfCategories.forEach(categoryObj => {
-            expect(categoryObj).to.have.property('id');
-            expect(categoryObj).to.have.property('category');
-            expect(categoryObj.category).to.have.property('id');
-            expect(categoryObj.category).to.have.property('name').to.equal(categoryName);
-            expect(categoryObj).to.have.property('pdf');
-            expect(Object.keys(categoryObj.pdf)).to.eql([
-              'id',
-              'title',
-              'pdf_url',
-              'author',
-              'short_description',
-              'access_type',
-              'user_id'
-            ]);
-            done();
-          });
         });
     });
   });

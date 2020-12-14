@@ -87,11 +87,11 @@ const createRules = [
     .withMessage('previews does not exists')
     .custom(async value => {
       if (!Array.isArray(value)) {
-        return Promise.reject(new Error('categories must be array'));
+        return Promise.reject(new Error('previews must be array'));
       }
       for (let i = 0; i <= value.length - 1; i += 1) {
         if (typeof value[i] !== 'string') {
-          return Promise.reject(new Error('invalid preview'));
+          return Promise.reject(new Error('previews must contain only string'));
         }
       }
       return true;
