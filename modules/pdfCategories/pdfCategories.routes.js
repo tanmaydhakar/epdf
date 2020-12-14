@@ -16,22 +16,4 @@ module.exports = function (router) {
     rules.verifyRules,
     pdfCategoriesController.show
   );
-
-  router.post(
-    '/api/pdf/:pdfId/pdfCategories',
-    auth.verifyToken,
-    pdfCategoryPolicy.isAllowed,
-    rules.createRules,
-    rules.verifyRules,
-    pdfCategoriesController.create
-  );
-
-  router.patch(
-    '/api/pdf/:pdfId/pdfCategories',
-    auth.verifyToken,
-    pdfCategoryPolicy.isAllowed,
-    rules.updateRules,
-    rules.verifyRules,
-    pdfCategoriesController.update
-  );
 };

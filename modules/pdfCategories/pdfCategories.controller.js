@@ -11,22 +11,6 @@ const show = async function (req, res) {
   return res.status(200).json({ pdfCategories: responseData });
 };
 
-const create = async function (req, res) {
-  const pdfCategories = await PdfCategory.createPdfCategories(req);
-
-  const responseData = await serializer.pdfCategories(pdfCategories);
-  return res.status(201).json({ pdfCategories: responseData });
-};
-
-const update = async function (req, res) {
-  const pdfCategories = await PdfCategory.updatePdfCategories(req);
-
-  const responseData = await serializer.pdfCategories(pdfCategories);
-  return res.status(200).json({ pdfCategories: responseData });
-};
-
 module.exports = {
-  show,
-  create,
-  update
+  show
 };

@@ -58,37 +58,6 @@ module.exports = (sequelize, DataTypes) => {
     return categoriesData;
   };
 
-  PdfCategory.createPdfCategories = async function (data) {
-    const { pdfId } = data.params;
-    const { categories } = data.body;
-
-    const categoriesData = await this.getCategoriesId(categories);
-
-    for (let i = 0; i <= categoriesData.length - 1; i += 1) {
-      const pdfCategory = new PdfCategory();
-      pdfCategory.pdf_id = pdfId;
-      pdfCategory.category_id = categoriesData[i].id;
-
-      await pdfCategory.save();
-    }
-
-    const pdfCategoriesData = await this.getPdfCategories(pdfId);
-    return pdfCategoriesData;
-  };
-
-  PdfCategory.updatePdfCategories = async function (data) {
-    const { pdfId } = data.params;
-    const { categories } = data.body;
-
-    const pdf = await allModels.Pdf.findByPk(pdfId);
-    const categoriesData = await this.getCategoriesId(categories);
-
-    await pdf.setCategories(categoriesData);
-
-    const pdfCategoriesData = await this.getPdfCategories(pdfId);
-    return pdfCategoriesData;
-  };
-
   PdfCategory.getPdfCategories = async function (pdfId) {
     const categories = await PdfCategory.findAll({
       where: {

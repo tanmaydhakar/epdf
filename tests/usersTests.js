@@ -263,6 +263,7 @@ module.exports = function () {
           const author = faker.name.findName();
           const short_description = faker.random.words(60);
           const access_type = 'Private';
+          const previews = ['https://host.com/images1'];
 
           chai
             .request(apiBase)
@@ -273,7 +274,9 @@ module.exports = function () {
               author,
               pdf_url,
               title,
-              access_type
+              access_type,
+              previews,
+              categories
             })
             .then(pdfResponse1 => {
               chai
@@ -347,7 +350,6 @@ module.exports = function () {
       });
 
       it('fail: delete an admin', done => {
-        console.log('erokoer');
         chai
           .request(apiBase)
           .delete(`/api/user/${userData2.id}`)

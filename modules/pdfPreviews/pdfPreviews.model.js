@@ -39,51 +39,6 @@ module.exports = (sequelize, DataTypes) => {
     allModels = models;
   };
 
-  PdfPreviews.createPdfPreview = async function (data) {
-    const { pdfId } = data.params;
-    const { previews } = data.body;
-
-    for (let i = 0; i < previews.length; i += 1) {
-      const pdfPreviews = new PdfPreviews();
-
-      pdfPreviews.image_url = previews[i];
-      pdfPreviews.pdf_id = pdfId;
-      await pdfPreviews.save();
-    }
-    const previewsData = this.getPreviews(pdfId);
-    return previewsData;
-  };
-
-  PdfPreviews.updatePdfPreview = async function (data) {
-    const { pdfId } = data.params;
-    const { previews } = data.body;
-
-    let previewsData = await this.getPreviews(pdfId);
-    const oldPreviews = previewsData.filter(
-      previewObject => !previews.includes(previewObject.image_url)
-    );
-
-    for (let i = 0; i < oldPreviews.length; i += 1) {
-      await oldPreviews[i].destroy();
-    }
-
-    for (let i = 0; i < previews.length; i += 1) {
-      await PdfPreviews.findOrCreate({
-        where: {
-          image_url: previews[i],
-          pdf_id: pdfId
-        },
-        defaults: {
-          image_url: previews[i],
-          pdf_id: pdfId
-        }
-      });
-    }
-
-    previewsData = await this.getPreviews(pdfId);
-    return previewsData;
-  };
-
   PdfPreviews.getPreviews = async function (pdfId) {
     const previews = await PdfPreviews.findAll({
       where: {

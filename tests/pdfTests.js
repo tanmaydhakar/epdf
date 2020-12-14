@@ -24,6 +24,9 @@ module.exports = function () {
     const author = faker.name.findName();
     const short_description = faker.random.words(60);
     const access_type = 'Private';
+    const categories = ['Nonfiction', 'Fiction'];
+    const previews = ['https://host.com/images1'];
+
     before(function (done) {
       const registerUser = function () {
         return new Promise(resolve => {
@@ -69,7 +72,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -80,7 +85,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -91,7 +98,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -101,7 +110,9 @@ module.exports = function () {
             title,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -112,7 +123,9 @@ module.exports = function () {
             title,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -122,7 +135,9 @@ module.exports = function () {
             pdf_url,
             title,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -133,7 +148,9 @@ module.exports = function () {
             pdf_url,
             title,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -144,7 +161,9 @@ module.exports = function () {
             pdf_url,
             title,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -154,7 +173,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -165,7 +186,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -176,7 +199,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -186,7 +211,9 @@ module.exports = function () {
             short_description,
             author,
             pdf_url,
-            title
+            title,
+            categories,
+            previews
           }
         },
         {
@@ -197,7 +224,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type: 123
+            access_type: 123,
+            categories,
+            previews
           }
         },
         {
@@ -208,7 +237,85 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type: 'test'
+            access_type: 'test',
+            categories,
+            previews
+          }
+        },
+        {
+          description: 'Fail: without categories',
+          msg: 'categories does not exists',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            previews
+          }
+        },
+        {
+          description: 'Fail: categories not array',
+          msg: 'categories must be array',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories: 'test',
+            previews
+          }
+        },
+        {
+          description: 'Fail: invalid category',
+          msg: 'invalid category',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories: ['test'],
+            previews
+          }
+        },
+        {
+          description: 'Fail: without preview',
+          msg: 'previews does not exists',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories
+          }
+        },
+        {
+          description: 'Fail: not array preview',
+          msg: 'previews must be array',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories,
+            previews: 'test'
+          }
+        },
+        {
+          description: 'Fail: not string preview',
+          msg: 'previews must contain only string',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories,
+            previews: [123]
           }
         }
       ];
@@ -239,7 +346,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           })
           .then(res => {
             expect(res.statusCode).to.equal(201);
@@ -268,7 +377,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -279,7 +390,9 @@ module.exports = function () {
             author,
             pdf_url,
             title: title + 1,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         }
       ];
@@ -312,7 +425,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -322,7 +437,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -333,7 +450,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -344,7 +463,9 @@ module.exports = function () {
             pdf_url,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -354,7 +475,9 @@ module.exports = function () {
             title,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -365,7 +488,9 @@ module.exports = function () {
             title,
             author,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -375,7 +500,9 @@ module.exports = function () {
             pdf_url,
             title,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -386,7 +513,9 @@ module.exports = function () {
             pdf_url,
             title,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -397,7 +526,9 @@ module.exports = function () {
             pdf_url,
             title,
             short_description,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -407,7 +538,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -418,7 +551,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -429,7 +564,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type
+            access_type,
+            categories,
+            previews
           }
         },
         {
@@ -439,7 +576,9 @@ module.exports = function () {
             short_description,
             author,
             pdf_url,
-            title
+            title,
+            categories,
+            previews
           }
         },
         {
@@ -450,7 +589,9 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type: 123
+            access_type: 123,
+            categories,
+            previews
           }
         },
         {
@@ -461,7 +602,35 @@ module.exports = function () {
             author,
             pdf_url,
             title,
-            access_type: 'test'
+            access_type: 'test',
+            categories,
+            previews
+          }
+        },
+        {
+          description: 'Fail: not string preview',
+          msg: 'previews must contain only string',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories,
+            previews: [123]
+          }
+        },
+        {
+          description: 'Fail: invalid category',
+          msg: 'invalid category',
+          data: {
+            short_description,
+            author,
+            pdf_url,
+            title,
+            access_type,
+            categories: ['test'],
+            previews
           }
         }
       ];
@@ -490,6 +659,8 @@ module.exports = function () {
         const author2 = faker.name.findName();
         const short_description2 = faker.random.words(60);
         const access_type2 = 'Private';
+        const previews2 = ['https://host.com/images2'];
+        const categories2 = ['Philosophy'];
 
         before(function (done) {
           const registerUser = function () {
@@ -532,7 +703,9 @@ module.exports = function () {
                 author: author2,
                 pdf_url: pdf_url2,
                 title: title2,
-                access_type: access_type2
+                access_type: access_type2,
+                previews: previews2,
+                categories: categories2
               })
               .then(() => {
                 return done();
@@ -545,7 +718,15 @@ module.exports = function () {
             .request(apiBase)
             .patch(`/api/pdf/${pdfResponse.id}`)
             .set('Authorization', `Bearer ${userToken}`)
-            .send({ short_description, author, pdf_url, title: title2, access_type })
+            .send({
+              short_description,
+              author,
+              pdf_url,
+              title: title2,
+              access_type,
+              previews,
+              categories
+            })
             .then(res => {
               expect(res.statusCode).to.equal(422);
               expect(res.body).to.have.property('message');
@@ -589,7 +770,15 @@ module.exports = function () {
           .request(apiBase)
           .patch(`/api/pdf/${pdfResponse.id}`)
           .set('Authorization', `Bearer ${userToken}`)
-          .send({ short_description, author, pdf_url: updatedPdfUrl, title, access_type })
+          .send({
+            short_description,
+            author,
+            pdf_url: updatedPdfUrl,
+            title,
+            access_type,
+            previews: ['https://host.com/images2'],
+            categories
+          })
           .then(res => {
             expect(res.statusCode).to.equal(200);
             expect(res.body).to.have.property('pdf');
@@ -679,7 +868,7 @@ module.exports = function () {
           .request(apiBase)
           .patch(`/api/pdf/${pdfResponse.id}`)
           .set('Authorization', `Bearer ${userToken}`)
-          .send({ short_description, author, pdf_url, title, access_type })
+          .send({ short_description, author, pdf_url, title, access_type, previews, categories })
           .then(() => {
             done();
           });
@@ -767,6 +956,8 @@ module.exports = function () {
       const author2 = faker.name.findName();
       const short_description2 = faker.random.words(60);
       const access_type2 = 'Private';
+      const previews2 = ['https://host.com/images2'];
+      const categories2 = ['Philosophy'];
 
       it('fail: deletes invalid pdf', done => {
         chai
@@ -822,7 +1013,9 @@ module.exports = function () {
               author: author2,
               pdf_url: pdf_url2,
               title: title2,
-              access_type: access_type2
+              access_type: access_type2,
+              previews: previews2,
+              categories: categories2
             })
             .then(res => {
               pdfResponse2 = res.body.pdf;

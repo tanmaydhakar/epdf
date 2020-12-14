@@ -8,8 +8,8 @@ exports.invokeRolesPolicies = function () {
       roles: ['Admin'],
       allows: [
         {
-          resources: '/api/pdf/:pdfId/pdfPreview',
-          permissions: ['get', 'post', 'patch']
+          resources: '/api/pdf/:pdfId/pdfPreviews',
+          permissions: ['get']
         }
       ]
     },
@@ -17,8 +17,8 @@ exports.invokeRolesPolicies = function () {
       roles: ['Author', 'Publication House', 'Parttime Blogger'],
       allows: [
         {
-          resources: '/api/pdf/:pdfId/pdfPreview',
-          permissions: ['get', 'post', 'patch']
+          resources: '/api/pdf/:pdfId/pdfPreviews',
+          permissions: ['get']
         }
       ]
     },

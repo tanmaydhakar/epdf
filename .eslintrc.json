@@ -25,6 +25,7 @@
     "radix": "off",
     "new-cap": "warn",
     "guard-for-in": "off",
-    "no-restricted-syntax": "off"
+    "no-restricted-syntax": "off",
+    "camelcase": "warn"
   }
 }

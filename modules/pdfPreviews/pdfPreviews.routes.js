@@ -7,29 +7,11 @@ const pdfPreviewController = require(path.resolve('./modules/pdfPreviews/pdfPrev
 
 module.exports = function (router) {
   router.get(
-    '/api/pdf/:pdfId/pdfPreview',
+    '/api/pdf/:pdfId/pdfPreviews',
     auth.verifyToken,
     pdfPreviewPolicy.isAllowed,
     rules.getRules,
     rules.verifyRules,
     pdfPreviewController.show
-  );
-
-  router.post(
-    '/api/pdf/:pdfId/pdfPreview',
-    auth.verifyToken,
-    pdfPreviewPolicy.isAllowed,
-    rules.createRules,
-    rules.verifyRules,
-    pdfPreviewController.create
-  );
-
-  router.patch(
-    '/api/pdf/:pdfId/pdfPreview',
-    auth.verifyToken,
-    pdfPreviewPolicy.isAllowed,
-    rules.updateRules,
-    rules.verifyRules,
-    pdfPreviewController.update
   );
 };

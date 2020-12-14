@@ -90,7 +90,6 @@ module.exports = function () {
         .get(`/api/roles/${casesArr[i].query}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .then(res => {
-          console.log(res.body);
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.have.property('roles');
           expect(res.body).to.have.property('total');
