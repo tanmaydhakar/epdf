@@ -235,5 +235,17 @@ module.exports = function () {
           done();
         });
     });
+
+    it('success: gets categories count', done => {
+      chai
+        .request(apiBase)
+        .get(`/api/categories-count`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .then(res => {
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.have.property('count');
+          done();
+        });
+    });
   });
 };

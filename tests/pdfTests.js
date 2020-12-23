@@ -1053,6 +1053,8 @@ module.exports = function () {
 
     describe('index all pdfs for admin', () => {
       let adminToken;
+      let userResponse;
+      let roleId;
 
       before(function (done) {
         const registerUser = function () {
@@ -1085,12 +1087,14 @@ module.exports = function () {
           });
         };
         getUserToken().then(async userData => {
+          userResponse = userData;
           adminToken = userData.token;
 
           const field = {
             name: 'Admin'
           };
           const role = await Role.findBySpecificField(field);
+          roleId = role.id;
           const user = await User.findByPk(userData.id);
           const userRole = new UserRole();
           userRole.user_id = user.id;
@@ -1120,6 +1124,56 @@ module.exports = function () {
                 expect(pdf).to.have.property('pdf_url');
               });
             }
+
+            done();
+          });
+      });
+
+      const cases = [
+        {
+          query: `?category=${categories[0]}`
+        },
+        {
+          query: `?author=${author}`
+        }
+      ];
+
+      for (let i = 0; i < cases.length; i += 1) {
+        it(`gets all pdf counts with query ${cases[i].query}`, done => {
+          chai
+            .request(apiBase)
+            .get(`/api/pdf-count${cases[i].query}`)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .then(res => {
+              expect(res.statusCode).to.equal(200);
+              expect(res.body).to.have.property('count');
+
+              done();
+            });
+        });
+      }
+
+      it('gets all pdf count by a user using user id', done => {
+        chai
+          .request(apiBase)
+          .get(`/api/pdf-count?userId=${userResponse.id}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .then(res => {
+            expect(res.statusCode).to.equal(200);
+            expect(res.body).to.have.property('count');
+
+            done();
+          });
+      });
+
+      it('gets all pdf count by a user using role id', done => {
+        chai
+          .request(apiBase)
+          .get(`/api/pdf-count?roleId=${roleId}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .then(res => {
+            expect(res.statusCode).to.equal(200);
+            expect(res.body).to.have.property('count');
 
             done();
           });

@@ -271,8 +271,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Pdf.getCount = async function (data) {
-    const { category, author } = data.query;
+    const { category, author, roleId, userId } = data.query;
     const whereStatement = {};
+    const roleQuery = {};
 
     if (category) {
       whereStatement['$categories.name$'] = category;
@@ -282,21 +283,44 @@ module.exports = (sequelize, DataTypes) => {
       whereStatement.author = author;
     }
 
-    const pdfCount = await Pdf.count({
+    if (roleId) {
+      roleQuery.role_id = roleId;
+    }
+
+    if (userId) {
+      whereStatement['$user.id$'] = userId;
+    }
+
+    const pdfs = await Pdf.findAll({
       where: whereStatement,
-      subQuery: false,
+      attributes: [],
       include: [
         {
           model: allModels.Category,
           as: 'categories',
-          attributes: ['name'],
+          attributes: [],
           through: {
             attributes: []
           }
+        },
+        {
+          model: allModels.User,
+          as: 'user',
+          required: true,
+          attributes: [],
+          include: [
+            {
+              model: allModels.UserRole,
+              as: 'userRoles',
+              where: roleQuery,
+              attributes: []
+            }
+          ]
         }
       ]
     });
 
+    const pdfCount = pdfs.length;
     return pdfCount;
   };
 
